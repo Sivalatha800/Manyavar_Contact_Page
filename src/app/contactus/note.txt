@@ -1,0 +1,154 @@
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormGroup,
+  Validators,
+  FormControl,
+  FormBuilder,
+} from '@angular/forms';
+import { ApiService } from '../api.service';
+import { apiURL } from './apiUrl';
+
+@Component({
+  selector: 'app-contactus',
+  templateUrl: './contactus.component.html',
+  styleUrls: ['./contactus.component.css'],
+})
+export class ContactusComponent implements OnInit {
+  myForm!: FormGroup;
+  submitted = false;
+  formDataObj: any;
+
+  selectedType = 'Shopping & Ordering';
+  selectedMode: any;
+
+  constructor(
+    public http: HttpClient,
+    public apiService: ApiService,
+    public fb: FormBuilder
+  ) {
+    this.myForm = fb.group({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-Z]*$/),
+      ]),
+      city: new FormControl('', [Validators.required]),
+      emailId: new FormControl('', [Validators.required, Validators.email]),
+      mobileNo: new FormControl('', [
+        Validators.required,
+
+        Validators.pattern(/^[6789][0-9]{9}$/),
+      ]),
+      feedback: new FormControl('', [Validators.required]),
+      captureNo: new FormControl('', [Validators.required]),
+      product_type: new FormControl(),
+      storeCity: new FormControl(),
+      storeName: new FormControl(),
+      orederNumber: new FormControl(),
+    });
+  }
+
+  get name() {
+    return this.myForm.get('name');
+  }
+  get city() {
+    return this.myForm.get('city');
+  }
+  get emailId() {
+    return this.myForm.get('emailId');
+  }
+  get mobileNo() {
+    return this.myForm.get('mobileNo');
+  }
+  get feedback() {
+    return this.myForm.get('feedback');
+  }
+  get captureNo() {
+    return this.myForm.get('captureNo');
+  }
+
+  ngOnInit(): void {
+    this.generateCapture();
+  }
+  random!: number;
+  generateCapture() {
+    let random = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+    this.captchaLoad(random);
+    this.random = random;
+  }
+
+  captchaLoad(random: any) {
+    var canvas = <HTMLCanvasElement>document.getElementById('canvastext');
+    var context = canvas.getContext('2d');
+    context?.clearRect(0, 0, canvas.width, canvas.height);
+    context!.font = '30px Arial, Helvetica, sans-serif';
+    context!.fillStyle = '#585858';
+    context?.fillText(random, 10, 35);
+  }
+
+  captureError: boolean = false;
+  captureValidation(event: any) {
+    if (this.random == event.target.value) {
+      this.captureError = false;
+    } else {
+      this.captureError = true;
+    }
+  }
+
+  onChange(event: any) {
+    this.selectedType = event.target.value;
+  }
+
+  onInputChange(event: any) {
+    this.selectedMode = event.target.value;
+  }
+
+  submitData(formData: any) {
+    this.submitted = true;
+    let sentData: sentDataObj = new sentDataObj();
+
+    if (this.myForm.valid && this.captureError == false) {
+      sentData.CaptchaCode = formData.captureNo;
+      sentData.City = formData.city;
+      sentData.Email = formData.emailId;
+      sentData.Enquiry = formData.feedback;
+      sentData.FirstName = formData.name;
+      sentData.Phone = formData.mobileNo;
+      sentData.Subject = this.selectedType;
+
+      if (this.selectedMode == 'Online') {
+        sentData.IsOnlineOrder = true;
+        sentData.OrderNumber = formData.orederNumber;
+      }
+      if (this.selectedMode == 'Offline') {
+        sentData.IsOnlineOrder = false;
+        sentData.StoreName = formData.storeName;
+        sentData.StoreCity = formData.storeCity;
+      }
+
+      this.apiService
+        .postService(apiURL, sentData)
+        .subscribe((data) => (this.formDataObj = data));
+      this.generateCapture();
+    } else {
+      return;
+    }
+  }
+}
+export class sentDataObj {
+  CaptchaCode: string = '';
+  City: string = '';
+  CurrencyId: string = '';
+  CustomerToken: string = '';
+  Email: string = '';
+  Enquiry: string = '';
+  FirstName: string = '';
+  IsOnlineOrder!: boolean;
+  MobileCountryCode: number = 1;
+  OrderNumber: string = '';
+  Phone: string = '';
+  StoreCity: string = '';
+  StoreName: string = '';
+  Subject: string = '';
+}

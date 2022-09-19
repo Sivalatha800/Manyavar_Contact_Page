@@ -1,0 +1,280 @@
+<div class="container">
+  <div class="contact">
+    <div class="contact_header text-center mt-3">
+      <h1 class="contact_contact main_head">Contact us</h1>
+      <p>
+        If you have a question or a comment, please call us on 1800 120 000 500
+        (India) (Mon to Sat 10.00 A.M. to 7:00 P.M. (IST) ) / +91 9674373838
+        (International) or email us at care@vedantfashions.com or use the form
+        below to contact us. If you are looking for a Manyavar/ Mohey store near
+        you, please use our Stores Locator page.
+      </p>
+    </div>
+    <div class="contact_body">
+      <div class="row">
+        <div class="col-6">
+          <h1 class="contact_contact sub_head text-center">Get in touch</h1>
+        </div>
+        <div class="col-6">
+          <h1 class="contact_contact sub_head text-center">Drop us a line</h1>
+
+          <form [formGroup]="myForm" class="myForm">
+            <div class="myForm_data">
+              <div class="input_box">
+                <label>Subject*</label>
+                <select (click)="radioListShow($event)">
+                  <option default value="Shopping & Ordering">
+                    Shopping & Ordering
+                  </option>
+                  <option value="Customer Feedback">Customer Feedback</option>
+                  <option value="Returns & Exchange">Returns & Exchange</option>
+                  <option value="Payments">Payments</option>
+                  <option value="Login Issues">Login Issues</option>
+                  <option value="Shopping & Tracking">
+                    Shopping & Tracking
+                  </option>
+                  <option value="Order Cancellations & Modifications">
+                    Order Cancellations & Modifications
+                  </option>
+                  <option value="Franchise Enquiry">Franchise Enquiry</option>
+                  <option value="Miscellaneous">Miscellaneous</option>
+                </select>
+              </div>
+
+              <div
+                class="row"
+                *ngIf="
+                  inputSelectSubject == 'Customer Feedback' ||
+                  inputSelectSubject == 'Returns & Exchange' ||
+                  inputSelectSubject == 'Payments'
+                "
+              >
+                <div class="col-6 my-auto input_radio">
+                  <input
+                    type="radio"
+                    name="product_type"
+                    value="Online"
+                    (click)="radioInputOnlineShow($event)"
+                  />
+                  &nbsp;
+                  <span>Online</span>
+                </div>
+
+                <div class="col-6 my-auto input_radio">
+                  <input
+                    type="radio"
+                    name="product_type"
+                    value="Offline"
+                    (click)="radioInputOnlineShow($event)"
+                  />
+                  &nbsp;
+                  <span>Offline</span>
+                </div>
+              </div>
+
+              <div *ngIf="inputRadioSelect == 'Online'">
+                <div class="input_box">
+                  <label>Oreder Number</label>
+                  <input
+                    type="text"
+                    name="orderNumber"
+                    placeholder="Order Number"
+                    formControlName="orederNumber"
+                  />
+                </div>
+              </div>
+
+              <div *ngIf="inputRadioSelect == 'Offline'">
+                <div class="input_box">
+                  <label>Store Name</label>
+                  <input
+                    type="text"
+                    name="storeName"
+                    placeholder="Store Name"
+                    formControlName="storeName"
+                  />
+                </div>
+
+                <div class="input_box">
+                  <label>Store City</label>
+                  <input
+                    type="text"
+                    name="storeCity"
+                    placeholder="Store City"
+                    formControlName="storeCity"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div class="input_box">
+                  <label>Name*</label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Name *"
+                    formControlName="name"
+                    minlength="3"
+                  />
+                </div>
+
+                <div class="form_error">
+                  <div
+                    *ngIf="(submitted &&  myForm.get('name')?.errors?.['required']) || (myForm.get('name')?.touched && myForm.get('name')?.errors?.['required'])"
+                  >
+                    Name is Required.
+                  </div>
+                  <div
+                    *ngIf="(myForm.get('name')?.dirty && myForm.get('name')?.errors?.['pattern'])  || (myForm.get('name')?.dirty && myForm.get('name')?.errors?.['minlength'])"
+                  >
+                    Invalid Full Name.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="input_box">
+                  <label>City*</label>
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City *"
+                    formControlName="city"
+                  />
+                </div>
+                <div class="form_error">
+                  <div
+                    *ngIf="submitted || (myForm.get('city')?.errors?.['required'] && myForm.get('city')?.touched)"
+                  >
+                    City is Required.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="input_box">
+                  <label>Email Id*</label>
+                  <input
+                    type="email"
+                    name="emailid"
+                    placeholder="Email ID *"
+                    formControlName="emailId"
+                  />
+                </div>
+
+                <div class="form_error">
+                  <div
+                    *ngIf="(submitted && myForm.get('emailId')?.errors?.['required']) || (myForm.get('emailId')?.touched && myForm.get('emailId')?.errors?.['required'])"
+                  >
+                    Email is Required.
+                  </div>
+                  <div
+                    *ngIf="myForm.get('emailId')?.dirty && myForm.get('emailId')?.errors?.['pattern']  "
+                  >
+                    Invalid Email Address.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="input_box">
+                  <label>Mobile No*</label>
+                  <input
+                    type="number"
+                    name="mobile"
+                    placeholder="Mobile Number *"
+                    formControlName="mobileNo"
+                    onKeyPress="if(this.value.length==10) return false;"
+                  />
+                </div>
+                <div class="form_error">
+                  <div
+                    *ngIf="(submitted && myForm.get('mobileNo')?.errors?.['required']) || (myForm.get('mobileNo')?.touched && myForm.get('mobileNo')?.errors?.['required'])"
+                  >
+                    Mobile Number is Required.
+                  </div>
+                  <div
+                    *ngIf="myForm.get('mobileNo')?.dirty && myForm.get('mobileNo')?.errors?.['pattern']  "
+                  >
+                    Invalid Mobile Number.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="input_box">
+                  <label>Feedback*</label>
+                  <textarea
+                    name="feedback"
+                    id=""
+                    cols="30"
+                    rows="1"
+                    placeholder="Feedback *"
+                    formControlName="feedback"
+                  ></textarea>
+                </div>
+                <div class="form_error">
+                  <div
+                    *ngIf="(submitted && myForm.get('feedback')?.errors?.['required']) || (myForm.get('feedback')?.touched && myForm.get('feedback')?.errors?.['required'])"
+                  >
+                    Enter Message.
+                  </div>
+                </div>
+              </div>
+
+              <div class="randomNumber">
+                <div class="row">
+                  <div class="col-3 my-auto">
+                    <canvas
+                      width="150px"
+                      height="50px"
+                      id="canvastext"
+                    ></canvas>
+                  </div>
+
+                  <div class="col-3 my-auto">
+                    <button (click)="generateCapture()">
+                      <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                  </div>
+
+                  <div class="col-6 my-auto">
+                    <div>
+                      <label>Human Identification</label>
+                      <input
+                        formControlName="captureNo"
+                        placeholder="Enter Code"
+                        class="form-control"
+                        name="captureNo"
+                        onKeyPress="if(this.value.length==6) return false;"
+                        type="number"
+                        (keyup)="captureValidation($event)"
+                      />
+                    </div>
+
+                    <div>
+                      <div class="form_error">
+                        <div
+                          *ngIf="(submitted && myForm.get('captureNo')?.errors?.['required']) || (myForm.get('captureNo')?.touched && myForm.get('captureNo')?.errors?.['required'])  "
+                        >
+                          Please enter the code shown.
+                        </div>
+                        <div *ngIf="captureError">Code does not match.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button class="submitBtn" (click)="submitData(myForm.value)">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
